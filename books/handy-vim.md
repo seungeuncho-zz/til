@@ -24,3 +24,10 @@ O 현재 행 위에 새로운 행을 만든 후 입력 모드
 R 수정(replace) 모드. 모든 글자가 덧쓰여짐
 
 # 저장과 종료 명령어
+:w
+:q
+:wq
+:w filename
+:q!
+:w! filename
+:wq! filename
