@@ -24,10 +24,10 @@ O 현재 행 위에 새로운 행을 만든 후 입력 모드
 R 수정(replace) 모드. 모든 글자가 덧쓰여짐
 
 # 저장과 종료 명령어
-:w
-:q
-:wq
-:w filename
-:q!
-:w! filename
-:wq! filename
+:w write, 현재 파일을 저장한다.
+:q quit, vi를 종료한다.
+:wq w와 q의 조합으로 저장하고 종료한다.
+:w filename filename에 해당하는 파일에 저장한다. (사본을 만드는 명령)
+:q! 변경된 내용을 버리고 vi를 종료한다.
+:w! filename filename에 해당하는 파일을 덮어쓴다.
+:wq! filename filename 에 해당하는 파일을 덮어쓰고 종료한다.
