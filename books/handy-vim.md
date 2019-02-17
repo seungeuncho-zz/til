@@ -31,3 +31,5 @@ R 수정(replace) 모드. 모든 글자가 덧쓰여짐
 :q! 변경된 내용을 버리고 vi를 종료한다.
 :w! filename filename에 해당하는 파일을 덮어쓴다.
 :wq! filename filename 에 해당하는 파일을 덮어쓰고 종료한다.
+
+# 연습
