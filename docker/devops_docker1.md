@@ -1,103 +1,197 @@
-# 백명석 클린 코더스 강의 1. 소개 및 OOP
-## why clean code
-## why OOP 
-* 절차지향
-    * 모든 프로시저가 데이터를 공유
-* 객체지향
-    * 프로시저를 실행하는데 필요한 만큼의 데이터만 가짐
-    * 데이터와 그 데이터를 사용하는
-## Object/Role/Responsibility
-- 객체를 볼때 data로 보는것이 아니라 기능으로 봐야한다.
-    - WriteArticleService (O)
-    - ArticleService (X)
-- 무엇으로 정의해야 한다 
-    - RequestParser
-- 어떻게로 정의하지 말아야한다.
-    - JsonRequestParser
-- 역할은 관롼된 책임의 집합 역할 하나에 책임이 여러개 있을 수 있다.
-    - 역할 e.g) 글쓰기 사용자 댓글쓰기 사용자
-## 객체지향 설계 과정
-1. 기능을 제공할 객체 후보 선별 
-    - 내부에서 필요한 데이터 선별
-    - 클래스 다이어그램
-2. 객체 간 메시지 흐름 연결
-    - 커뮤니케이션 다이어그램
-    - 시퀀스 다이어그램
-1,2를 반복
+# Docker 이해
+## Docker는 무엇인가?
+리눅스컨테이너 기술을 이용해 어플리케이션 패키징, 배포를 지원하는 경량의 가상화 플랫폼
 
-## Encapsulation
-- 내부적으로 어떻게 구현했는지를 감춰 내부의 변경 (데이터, 코드)이 client가 변경 되지 않도록
-    -코드 내부의 변화
+## 왜 도커를 써야 할까?
+다양한 환경에서 많은 어플리케이션과 서버를 사용할때 그만큼의 config를 설정해야함  
+규격화된 상자에 넣어서 가지고 다니자.  
+x*y만큼 해야하는 일을 1번으로 줄이자.  
+어느 환경에서도 실행 가능.  
 
-```java
-public class ProceduralStopWatch {
-    public long startTime;
-    public long stopTime;
-    public long startNanoTime;
-    public long stopNanoTime;
+## 하이퍼바이저 (hypervisor)
+호스트 컴퓨터에서 다수의 운영체제를 동시에 실행하기 위한 논리적 플랫폼  
 
-    public long getElapsedTime() {
-        return stopTime - startTime;
-    }
+aka 가상화 머신 모니터, 가상화 머신 매니저  
 
-    public long getElapsedNanoTime() {
-        return stopNanoTime - startNanoTime;
-    }
-}
-```
+Hypervisor  
+Infrastructure -> Hypervisor -> vm (guestOs-> Bins/Libs-> app B)  
 
-private 을 하고 getter setter로 하나 public이나...
+Contatiner
+Infrastructure -> HostOS-> docker -> contatiner
+Hypervisor와는 다르게 GuestOS가 없음  
+vm이 주택 contatiner 아파트  
 
-객체 지향은 getter setter 가 없고 기능만 있다.
+## 도커는 가볍다
+VM에 비해 이미지 파일 크기가 작아서 빠르게 이미지를 만들고 실행할 수 있다.
 
-```java
-public class StopWatch {
-    private long startTime;
-    private long stopTime;
+## Immutable Infrastructure
+이미지 기반의 어플리케이션 배포 패러다임  
+많은 서버를 동적으로 관리하는 클라우드 환경에서 효과적이고 유연한 배포 방식  
+ec2-> ami 이미지를 찍어놓는거  
 
-    public void start() {
-        startTime = System.nanoTime();
-    }
+### 특징
+- 관리 가능하다
+- stateless 하다. (언제 사라져도 괜찮다)
+- scalable (줄였다 늘렸다 가능)
+- 이미지 기반
+- 어플리케이션 배포
 
-    public void stop() {
-        stopTime = System.nanoTime();
-    }
+## 리눅스 컨테이너(LXC, Linux Container)
+호스트 서버 (리눅스) 안에 독립된 리눅스 시스템을 만들어서 하나의 리눅스 처럼 쓰고 싶은 요구 -> 만들어 놓은게 LXC  
+단일 리눅스 호스트상에서 여러개의 격리된(isolated 리눅스 시스템을 실행하기 위한 OS 수준의 가상화  
+도커가 lxc 를 쓰는것 (도커가 기반으로 개발된 오픈소스 시스템)
 
-    public Time getElapsedTime() {
-        return new Time(stopTime - startTime);
-    }
-}
-```
+## 도커는 왜 성공했을까?
+lxc는 설정 복잡하고 사용하기 어려움  
+도커는 사용하기 쉽다.  
 
-- Tell, Dont' Ask 
-    - 객체가 자기가 가지고 있는 상태에 대해서 남에게 알려주는 경우가 많은데
-    - e.g if(member.getExpiredDate().getTime() < System.currentTimeMillis) (X)
-        if(member.isExpired())
+Swam -> docker에서 만들었다.
+Kubernetes -> google 에서 만들었다.
 
-- Command Vs Query
-    - Command(Tell)
-        - 객체의 내부 상태를 변경
-    - Query(Ask)
+## Docker Client
+- 도커 엔진과 통신하는 프로그램
+- 맥 - 하이퍼바이저로 사용한다. (가상 머신을 깔고 그 위에서 실행 바로 사용 못함)
+- Kitemetic - 템플릿 기반으로 도커 컨테이너를 관리할 수 있게 해주는 GUI 도커 클라이언트
+- Rest API를 호출하는 것이 docker client
 
-## Polymorphism
-- 한 객체가 여러가지(poly) 모습/타입을(morph) 가질 수 있다
-상속을 통해 다형성을 구현
-- inheritance (구현 상속)
-    - 수퍼 타입의 구현을 재사용
-    - 고치기 어렵다.
-- interface (인터페이스 상속)
-    - 타입 정의만 상속
-    - 상속은 객체에게 다형성을 제공
-    - 로직에서 변경 가능 한 부분을 외부에서 구현 외부에서 바라볼때는 인터페이스를 통해 바라본다. 바로 바라보면 바꿀 수가 없다.
-    - 부가적인 기능을 넣기 쉽다. 유연하다.
-    - 인터페이스를 사용하는 코드는 재사용이 가능하다.
-    - 인터페이스 구현체 A 새로운 구현체 B가 들어가도 해당 구현체를 사용하는 애는 계속 사용 가능하다.
-- 구현체에 변경이 일어나도 내가 작성한 코드는 변경이 안일어나는 것이 재사용.
+## Docker Engine
+- 어플리케이션을 컨테이너로 만들고 실행하게 해주는 데몬
+- Swarm, Kubernetes 와 통합
 
-## 타입 추상화
-- Programming to interface
-    - 구체적인 class를 보지 말고 interface를 보고 개발하라
-- 추상화와 개발자의 습성
-    - 상세한 구현을 하다보면 상위 수준의 설계를 놓치기 쉬운데 중간 중간 무엇을 하고 있는지 그림을 그려보는 것도 좋다. (말이 되는지, 이렇게 하는 것이 맞는지)
-    - 놓치기 전 추상화를 한번 더 생각해봐라
-    
+## Docker Machine
+- 로컬, 리모트 서버에 도커 엔진을 설치하고, 설정을 자동으로 해주는 프로비저닝 클라이언트
+
+## Docker Hub
+- 도커 이미지를 관리하는 저장소
+- 오픈소스 공식 이미지 관리
+
+## Docker Data Center
+- DUCP + DTR
+
+## Docker Cloud
+- 도커 이미지, 컨테이너 관리를 지원
+
+## 도커 실행하기
+``` docker version ```
+실행시 Client , Server가 둘 다 띄어져 있는지 확인
+
+``` docker info ```
+docker server 의 정보
+
+``` docker run hello-world```
+hello-world 라는 컨테이너를 실행해라
+run 컨테이너 실행
+hello-world 컨테이너가 없으면 컨테이너를 다운 받아 온다.
+
+한개의 client 가 한개의 host에 통신
+Namespace: 프로세스별 리소스 격리
+Cgroups: 리소스 관리
+
+도커는 client랑 통신할때 tcp를 사용 안함.
+unix소켓과 데몬이 바인딩 함.
+docker Rest Api - 외부에서 rest api 를 쓰려면 열어야 함.
+
+
+## 도커 이미지
+- 컨테이너를 만들기 위한 템플릿 
+- 붕어빵 틀 같은 것
+- 읽기 전용 파일 시스템으로 도커가 애플리케이션을 배포하는 단위.
+- 레이어 파일 시스템으로 각 파일시스템이 곧 이미지
+    - 여러개 레이어 혹은 단일 레이어로 구축 가능
+    - 아래의 레이어는 read-only로. 아래의 레이어가 변경 되면 안됨
+- 파일 시스템 모드
+    - read-only
+    - read-write
+- bootfs
+    - 도커 엔진이 사용하는 파일시스템
+    - root 파일 시스템 레이어 (OS 설치 영역)
+    - read-only 모드
+
+# 베이스 이미지
+- 이미지의 부모가 되는 이미지
+
+어플리케이션 컨테이너 띄우기위해 만든 이미지
+수정해서 이미지를 다시 만들면 일부만 바뀐것이기 때문에
+일부만 이미지를 만든다. 그것의 id를 만든다. 그것만 따로 저장소에 올린다.
+다시 pull 하면 다른 부분만 가져온다.
+
+## Image Layers
+- 도커 이미지 계층구조를 확인할 수 있다.
+
+## Dockerfile
+- 도커 이미지를 만들기 위해 설치할 SW, 필요한 설정을 정의하는 파일
+- 이미지 제작 과정을 투명하게 한다.
+
+```docker search whalesay
+docker pull docker/whalesay
+docker images
+```  
+```docker pull docker/whalesay```
+레이어가 여러개면 여러개를 다운로드 받음
+맨 앞에 있는 것은 id
+``` docker ps ```
+현재 실행중인 것
+``` docker ps -a ```
+실행 되었다가 종료 된 것
+
+``` RUN apt-get -y update && apt-get install -y fortune ```
+chaning으로 쓰는 것 과 chaning으로 쓰지 않는게 RUN 갯수 정도로 이미지가 만들어지기 때문에 간단한 것은 RUN 을 여러개 안하고 한번에 하는게 나음  
+때에 따라 다름  
+업데이트 하는것은 별개로 하는 것이 좋음
+복수의 명렁어 실행 시에 RUN 명령어 순서는 상관있음
+
+## 도커 이미지 크기를 줄이는 방법
+- 가벼운 베이스 이미지를 사용한다.
+- Dockerfile 명령을 체인으로 사용한다.
+- 빌드 도구를 설치하지 않는다.
+- 패키지 관리자를 정리한다.
+    - apt clean
+
+## 도커 컨테이너
+- 이미지를 실행한 상태
+    - 읽기/쓰기가 가능한 파일 시스템(read-write layer)
+- 실행된 독립 애플리케이션
+    - 컨테이너는 가상서버가 아니다.
+        - 실제는 프로세스 pid 를 가지고 있음 죽일수 있음
+        - 가상서버라면 ssh로 들어가서 바꿀수 있지만 컨테이너는 그게 안됨
+- 이미지는 read-only 컨테이너는 read-write. writable 하면 컨테이너
+
+# 실습 
+``` docker run -e MYSQL_ROOT_PASSWORD='Passw0rd' --name mydb -d mysql:5.6 ```
+환경변수 정의는 -e
+한번 뜨고 죽으면 안되고 데몬모드여야 하기 때문에 -d
+
+!(실습)[/Users/joseongeun/Desktop/docker1/mysql-1.png]
+docker rm $(docker ps -al)
+도커 컨테이너 다 지울수 있음 
+
+``` docker run --name myweb -d -p 80:80 nginx ```
+80:80
+왼쪽 외부로 서비스할때 포트(host) 오른쪽이 컨테이너 내부 포트(container)
+
+외부 80 으로 오면 내부 80으로 바인딩 하겠다.
+도커 컨테이너 이름은 유일해야함.
+같은 포트로 또 런 하려고 하면 에러.
+이미 80이 있기 때문에 안됨.
+!(실습)[/Users/joseongeun/Desktop/docker1/nginx-1.png]
+!(실습)[/Users/joseongeun/Desktop/docker1/nginx-error.png]
+
+``` docker run --name myweb -d -P nginx ```
+도커가 자동으로 열러있는 포트와 바인딩 함.
+!(실습)[/Users/joseongeun/Desktop/docker1/nginx-2.png]
+
+## VM 활용
+### Docker Machine
+- 가상서버에 도커엔진을 설치할 수 있게 도와주는 도구
+
+## Vagrant
+- 다양한 가상머신을 동일한 방식으로 만들고 관리할 수 있게 해주는 도구
+- 도커머신과의 장단점이 있음
+
+Q. docker build 하면 어디에 올라가나?
+Q. eb와 docker
+
+## 컨테이너 활용
+
+## 실습
+
