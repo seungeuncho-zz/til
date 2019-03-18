@@ -80,4 +80,5 @@ docker run -it -v /var/run/docker.sock:/var/run/docker.sock ubuntu:latest sh -c 
  - v 볼륨으로 공유
 
  # 실습
- 
+
+# 복습 
