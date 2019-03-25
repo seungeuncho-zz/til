@@ -151,3 +151,5 @@ kubectl config view
 eval $(docker-machine env fc-docker)
 
 kubectl describe svc kubernetes-dashboard -n kube-system
+
+# 연습
