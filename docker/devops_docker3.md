@@ -169,3 +169,5 @@ kubectl describe svc kubernetes-dashboard -n kube-system
 # 실습
 
 # 실습
+
+# 실습
